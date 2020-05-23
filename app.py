@@ -87,16 +87,22 @@ def upload_file():
 			flash('No selected file')
 			return redirect(request.url)
 		if file and allowed_file(file.filename):
-			filename = secure_filename(file.filename)
-			file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			image = cv2.imread(os.path.dirname(os.path.realpath(__file__))+"/uploads/"+filename)
+			#filename = secure_filename(file.filename)
+			#file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+			#image = cv2.imread(os.path.dirname(os.path.realpath(__file__))+"/uploads/"+filename)
 			#deficiency = deficiency(image)
 			
+			# receives posted image
+        	file = request.files['file'].read()
+        	# convert string of image data to uint8
+        	nparr = np.fromstring(file, np.uint8)
+        	# decode image
+        	img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 			classifier = load_model('./models/128_vgg_16.h5')
 			#image = cv2.resize(image, (128,128), interpolation = cv2.INTER_AREA)
 			#image = image.reshape(1,128,128,3)
 			#input = []
-			image = cv2.resize(image, (128, 128), interpolation = cv2. INTER_LINEAR)
+			image = cv2.resize(img, (128, 128), interpolation = cv2. INTER_LINEAR)
 			image = image / 255.
 			image = image.reshape(1,128,128,3)
 			res = str(np.argmax(classifier.predict(image, 1, verbose = 0), axis=1))
