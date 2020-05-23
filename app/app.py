@@ -56,19 +56,6 @@ dict =               {"[0]": "Apple___Apple_scab",
                       "[36]": "Tomato___Tomato_mosaic_virus",
                       "[37]": "Tomato___healthy"}
 
-"""def deficiency(image):
-	classifier = load_model('./models/128_vgg_16.h5')
-	image = cv2.resize(image, (128,128), interpolation = cv2.INTER_AREA)
-	image = image.reshape(1,128,128,3)
-	'''input = cv2.resize(input, (128, 128), interpolation = cv2. INTER_LINEAR)
-	input_im = input_im / 255.
-	input = input.reshape(1,128,128,3)
-	res = np.argmax(classifier.predict(input, 1, verbose = 0), axis=1)'''
-	
-	res = str(classifier.predict_classes(image, 1, verbose = 0)[0][0])
-	K.clear_session()
-	return res"""
-
 def allowed_file(filename):
 	return '.' in filename and \
 		   filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -80,48 +67,27 @@ def upload_file():
 		if 'file' not in request.files:
 			flash('No file part')
 			return redirect(request.url)
-		file = request.files['file']
+		file = request.files['file'].read()
 		# if user does not select file, browser also
 		# submit an empty part without filename
 		if file.filename == '':
 			flash('No selected file')
 			return redirect(request.url)
 		if file and allowed_file(file.filename):
-			#filename = secure_filename(file.filename)
-			#file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-			#image = cv2.imread(os.path.dirname(os.path.realpath(__file__))+"/uploads/"+filename)
-			#deficiency = deficiency(image)
-			
-			# receives posted image
-        	file = request.files['file'].read()
-        	# convert string of image data to uint8
-        	nparr = np.fromstring(file, np.uint8)
-        	# decode image
-        	img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+			nparr = np.fromstring(file, np.uint8)
+			img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
 			classifier = load_model('./models/128_vgg_16.h5')
-			#image = cv2.resize(image, (128,128), interpolation = cv2.INTER_AREA)
-			#image = image.reshape(1,128,128,3)
-			#input = []
 			image = cv2.resize(img, (128, 128), interpolation = cv2. INTER_LINEAR)
 			image = image / 255.
 			image = image.reshape(1,128,128,3)
 			res = str(np.argmax(classifier.predict(image, 1, verbose = 0), axis=1))
-	
-			#res = str(classifier.predict_classes(image, 1, verbose = 0)[0][0])
 			K.clear_session()
-			#os.remove("./uploads/"+filename) 
 			result = dict[res]
-			
-			#return redirect(url_for('upload_file',filename=filename)), jsonify({"key":
 			return jsonify({"Deficiency": result} )
 	return '''
 	<!doctype html>
 	<title>OK</title>
 	<h1>OK!!!</h1>'''
-
-
-
-
 
 if __name__ == "__main__":
 	app.run()
