@@ -109,7 +109,7 @@ def upload_file():
 	
 			#res = str(classifier.predict_classes(image, 1, verbose = 0)[0][0])
 			K.clear_session()
-			os.remove("./uploads/"+filename) 
+			#os.remove("./uploads/"+filename) 
 			result = dict[res]
 			
 			#return redirect(url_for('upload_file',filename=filename)), jsonify({"key":
