@@ -67,24 +67,24 @@ def upload_file():
 		if 'file' not in request.files:
 			flash('No file part')
 			return redirect(request.url)
-		file = request.files['file']
+		file = request.files['file']        
 		# if user does not select file, browser also
 		# submit an empty part without filename
 		if file.filename == '':
 			flash('No selected file')
 			return redirect(request.url)
 		if file and allowed_file(file.filename):
-            file = file.read()
-			nparr = np.fromstring(file, np.uint8)
-			img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-			classifier = load_model('./models/128_vgg_16.h5')
-			image = cv2.resize(img, (128, 128), interpolation = cv2. INTER_LINEAR)
-			image = image / 255.
-			image = image.reshape(1,128,128,3)
-			res = str(np.argmax(classifier.predict(image, 1, verbose = 0), axis=1))
-			K.clear_session()
-			result = dict[res]
-			return jsonify({"Deficiency": result} )
+                    filex = file.read()
+                    nparr = np.fromstring(filex, np.uint8)
+                    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
+                    classifier = load_model('./models/128_vgg_16.h5')
+                    image = cv2.resize(img, (128, 128), interpolation = cv2. INTER_LINEAR)
+                    image = image / 255.
+                    image = image.reshape(1,128,128,3)
+                    res = str(np.argmax(classifier.predict(image, 1, verbose = 0), axis=1))
+                    K.clear_session()
+                    result = dict[res]
+                    return jsonify({"Deficiency": result} )
 	return '''
 	<!doctype html>
 	<title>OK</title>
