@@ -6,4 +6,10 @@ services:
     build: 'app/.'
     restart: unless-stopped
     ports:
-      - "80:8000"
+      - "8000:8000"
+  
+  nginx:
+    container_name: nginx
+    build: 'nginx/.'
+    restart: unless-stopped
+    ports: "80:80"
