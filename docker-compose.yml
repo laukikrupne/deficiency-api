@@ -13,4 +13,4 @@ services:
     build: 'nginx/.'
     restart: unless-stopped
     ports: 
-      - "80:80"
+      - "80:8080"
